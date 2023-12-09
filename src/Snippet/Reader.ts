@@ -3,6 +3,7 @@ export interface ReaderResult{
 	ClassList : string[];
 	Area : number[];
 	Children : ReaderResult[];
+	DebugText : string;
 };
 
 export default abstract class Reader{
@@ -11,9 +12,16 @@ export default abstract class Reader{
 	Text : string;
 	Element : HTMLElement;
 	Nodes : string[] = ["\n", "\t"];
+
+	Modifiers : {[key:string] : string[]} = {
+		"brackets": ["{", "}"],
+		"punctuation": [";", ",", ":"]
+	};
 	abstract Brackets : string[];
-	constructor(element : HTMLElement, value : string){
+	File : string;
+	constructor(file : string, element : HTMLElement, value : string){
 		this.Text = value;
+		this.File = file;
 		this.Element = element;
 	}
 
@@ -23,23 +31,27 @@ export default abstract class Reader{
 		while(i < array.length){
 			let item = array[i];
 			let filtered : ReaderResult[] = [];
-			for (let x = i + 1; x < array.length; ){
-				if (item.Area[0] <= array[x].Area[0] &&
-					array[x].Area[1] <= item.Area[1]){
-					filtered.push(array[x]);
-					array.splice(x, 1);
-				}else{
-					x++;
+			for (let x = 0; x < array.length; x++){
+				if (x != i){
+					if (item.Area[0] <= array[x].Area[0] &&
+						array[x].Area[1] <= item.Area[1]){
+						filtered.push(array[x]);
+						array.splice(x, 1);
+						x--;
+					}
 				}
 			}
-			item.Children = item.Children ? [...item.Children, ...filtered] : filtered;
-			
+			if (filtered.length > 0){
+				console.log("adding  ", filtered," to ", item.Children)
+				item.Children = item.Children ? [...item.Children, ...filtered] : filtered;
+			}
 			i++;
 		}
 		if (oldLength != array.length){
-			for (let i = 0; i < array.length; i++){
-				this.SetLayers(array[i].Children);
-			}
+			this.SetLayers(array);
+		}
+		for (let i = 0; i < array.length; i++){
+			this.SetLayers(array[i].Children);
 		}
 	}
 
@@ -65,15 +77,25 @@ export default abstract class Reader{
 	}
 
 	AddText(parent : HTMLElement, text : string){
-		let nodes = [...this.Nodes, ...this.Brackets];
+
+		let nodes = [...this.Nodes];
+		for (let mod in this.Modifiers){
+			nodes.push(...this.Modifiers[mod])
+		}
 		let split = this.Splitter(text, nodes);
 		for (let i = 0; i < split.length; i++){
 			if (nodes.includes(split[i])){
-				let elem = document.createElement(split[i] == "\n" ? "br" : "span")
-				if (this.Brackets.includes(split[i])){
-					elem.classList.add("bracket");
-					elem.innerText = split[i];
-				}else if (split[i] == "\t"){
+				let elem = document.createElement(split[i] == "\n" ? "br" : "span");
+				let found = false;
+				for (let mod in this.Modifiers){
+					if (this.Modifiers[mod].includes(split[i])){
+						elem.classList.add(mod);
+						elem.innerText = split[i];
+						found = true;
+						break;
+					}
+				}
+				if (split[i] == "\t"){
 					elem.classList.add("tab");
 					elem.innerHTML = "&#9;";
 				}
@@ -87,6 +109,10 @@ export default abstract class Reader{
 
 	LastPos = 0;
 	CreateSpan(parent : HTMLElement, result : ReaderResult) {
+		for (let key of result.Children){
+			key.DebugText = this.Text.substring(key.Area[0], key.Area[1]);
+		}
+		result.Children.sort((a, b)=>{return a.Area[0] - b.Area[0];});
 		let elem = document.createElement("span");
 		elem.classList.add(...result.ClassList);
 		if (result.Children.length == 0){
@@ -112,9 +138,16 @@ export default abstract class Reader{
 		parent.append(elem);
 	}
 
-	SetElements(){
+	SetElements(doSetLayers = false){
 		let temp : ReaderResult[] = [...this.Results];
-		this.SetLayers(temp);
+		for (let key of temp){
+			key.DebugText = this.Text.substring(key.Area[0], key.Area[1]);
+		}
+		temp.sort((a, b)=>{return a.Area[0] - b.Area[0];});
+		//console.error("oops", temp);
+		if (doSetLayers){
+			this.SetLayers(temp);
+		}
 		let elements : HTMLElement[] = [];
 		let lastPos = 0;
 		

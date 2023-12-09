@@ -7,13 +7,17 @@ import { TemplateNode } from "svelte/types/compiler/interfaces";
 
 export default class HTML extends Reader{
 
+	Modifiers : {[key:string] : string[]} = {
+		"brackets": ["<", ">", "!", "/"]
+	};
 	Brackets : string[] = ["<", ">", "!", "/"];
 	Nodes : string[] = ["\n", "\t"];
 	ReadNode(elem : TemplateNode) : ReaderResult {
 		let newResult : ReaderResult = {
 			ClassList : [elem.type],
 			Children: [],
-			Area: [elem.start, elem.end]
+			Area: [elem.start, elem.end],
+			DebugText: ""
 		}
 		if (elem.type == "Attribute"){
 			if (elem.value && elem.value != true){
@@ -37,12 +41,12 @@ export default class HTML extends Reader{
 				newResult.Children.push(this.ReadNode(elem.children[i]));
 			}
 		}
-		console.log(elem);
+		//console.log(elem);
 		return newResult;
 	}
 
-    constructor(element : HTMLElement, value : string){
-        super(element, value);
+    constructor(file : string, element : HTMLElement, value : string){
+        super(file, element, value);
         const AST = parse(value);
         for (let i = 0; i < AST.html.children.length; i++){
 			this.Results.push(this.ReadNode(AST.html.children[i]));

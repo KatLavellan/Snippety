@@ -4,6 +4,7 @@ import Reader from "./Reader";
 import CSS from "./CSS";
 import { allIndexesOf } from "./Generic";
 import HTML from "./HTML";
+import TS from "./TS";
 
 export enum SnippetType{
     INLINE, INBETWEEN_LINES, BIG
@@ -12,12 +13,14 @@ export enum SnippetType{
 export enum LanguageType{
     JS = "js",
     TS = "ts",
-    CSS = "css"
+    CSS = "css",
+	HTML = "html"
 }
 
 let options : Record<string, any> = { 
     css: CSS ,
-    html: HTML 
+    html: HTML ,
+    ts: TS 
 };
 
 export default class Snippet{
@@ -56,7 +59,7 @@ export default class Snippet{
         }
         if (options.hasOwnProperty(actualType)){
             let type = options[actualType];
-            let reader = new type(this.Element, value);
+            let reader = new type(file, this.Element, value);
         }
     }
 }

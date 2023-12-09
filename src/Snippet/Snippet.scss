@@ -11,6 +11,12 @@ code-snippet{
     font-family:arial;
     border-radius:0.4em;
     white-space:pre;
+	--line-height-temp : 1.185em;
+	font-family: Consolas, 'Courier New', monospace;
+	margin:0.3em;
+	aside, main{
+		line-height:var(--line-height-temp);
+	}
     aside{
         display:block;
         margin-top:0px;
@@ -24,17 +30,21 @@ code-snippet{
             user-select:none;
 			min-width:1.3em;
             padding-right:0.3em;
+			line-height: calc(var(--line-height-temp) + 0.0071em - 1px);
             border-bottom:1px solid rgba(98, 98, 98, 0.156);
 			color:rgba(255, 255, 255, 0.395);
         }
     }
+	.tab{
+		display:inline-block;
+		width:2.5em;
+	}
     main{
 		color:#D4D4D4;
         padding-left:0.3em;
         display:block;
         padding-top:0.3em;
         padding-bottom:0.4em;
-		line-height:1.185em;
     }
 
 }

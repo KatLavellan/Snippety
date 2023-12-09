@@ -1,0 +1,65 @@
+
+code-snippet.ts{
+
+	.ExportDefaultDeclaration, .ExportDeclaration{
+		color:#C586C0;
+	}
+	.ClassExpression, .ClassDeclaration, .TsInterfaceDeclaration{
+		color:#569CD6;
+		.Identifier{
+			color:#4EC9B0;
+		}
+	}
+
+	.TsPropertySignature{
+		.Identifier{
+			color:#90D0F7;
+		}
+	}
+	.Parameter{
+		color:#90D0F7;
+	}
+
+	.Constructor{
+		.Identifier{
+			color:#569CD6;
+		}
+	}
+	.ClassProperty, .Parameter{
+		.Identifier{
+			//color:#4EC9B0;
+			color:#9CDCFE;
+		}
+	}
+	.TsTypeReference, .string, .boolean{
+		color:#4EC9B0;
+	}
+	.brackets{
+		color:#FFD409;
+	}
+	.TsArrayType, .ArrayExpression{
+		color:#DA70D6;
+	}
+	.ClassMethod, .Constructor{
+		.bracket{
+			color:#DA70D6;
+		}
+	}
+	.punctuation{
+		color:#D4D4D4;
+	}
+	.ClassMethod{
+		//.
+	}
+	.CallExpression .Identifier{
+		color:#9CDCFE;
+	}
+	.MemberExpression{
+		.Identifier{ 
+			color:#DCDCAA;
+		}
+	}
+	.StringLiteral, .StringLiteral .brackets{
+		color:#CE9178 !important;
+	}
+}

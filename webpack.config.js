@@ -42,9 +42,10 @@ module.exports = (env)=>{
 				},
 			],
 		},
-			mode: "development",
-			resolve: {
-			extensions: ['.tsx', '.ts', '.js'],
+
+		mode: "development",
+		resolve: {
+			extensions: ['.tsx', '.ts', '.js']
 		},
 		output: {
 			filename: 'bundle.js',
