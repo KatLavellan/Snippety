@@ -1,0 +1,7 @@
+.sample{
+	text-align:center;
+} 
+
+div#test.test:hover:nth-child(4)   {
+	max-width: 300px;
+}
