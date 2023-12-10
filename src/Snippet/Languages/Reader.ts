@@ -42,7 +42,7 @@ export default abstract class Reader{
 				}
 			}
 			if (filtered.length > 0){
-				console.log("adding  ", filtered," to ", item.Children)
+				//console.log("adding  ", filtered," to ", item.Children)
 				item.Children = item.Children ? [...item.Children, ...filtered] : filtered;
 			}
 			i++;

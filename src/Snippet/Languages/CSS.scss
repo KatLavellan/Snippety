@@ -3,9 +3,10 @@ code-snippet.css{
         color:#D7BA7D;
     }
 
-    .bracket{
+    .brackets{
         color:#FFD700;
     }
+	
 
     .Declaration{
         color:#9CDCFE;
@@ -13,11 +14,14 @@ code-snippet.css{
     .Value{
         color:#CE9178;
     }
-    .Dimension{
+    .Dimension, .AnPlusB{
         color:#B5CEA8;
     }
     .value.default{
         font-weight:600;
     }
+	.Comment{ /**/
+		color:#6A9953;
+	}
 }
 

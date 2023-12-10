@@ -1,0 +1,6 @@
+{
+	"<!DOCTYPE html>": {
+		"Name": "Doctype",
+		"Description": "Specifies that it has modern features (modern tags, canvas, etc.), and isn't quirky with it."
+	}
+}

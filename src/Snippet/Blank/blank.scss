@@ -1,0 +1,34 @@
+:root{
+	--nice-colour: rgb(125, 196, 113);
+}
+body, html{
+	padding:0px;
+	margin:0px;
+	width:100vw;
+	height:100vh;
+}
+
+.sample{
+	width:100vw;
+	height:100vh;
+}
+
+.tooltip{
+	font-family: Consolas, 'Courier New', monospace;
+	position:fixed;
+	padding:0.2em;
+	color:white;
+	user-select:none;
+	pointer-events:none;
+	background-color:rgb(19, 19, 19);
+	transform:translate(0, -100%);
+	.isTag{
+		color:#569CD6;
+	}
+	.isClass{
+		color:#D7BA7D;
+	}
+	.isID{
+		color:#CE9178;
+	}
+}

@@ -1,7 +1,7 @@
 import Reader, { ReaderResult } from "./Reader";
 import "./TS.scss"
 import * as ts from "typescript";
-import config from "../../tsconfig.json";
+import config from "../../../tsconfig.json";
 import initSwc, { ModuleItem, parse, parseSync, transform, transformSync } from "@swc/wasm-web";
 
 export default class TS extends Reader{
@@ -18,7 +18,6 @@ export default class TS extends Reader{
     }
 
 	addItem(elem : any) : ReaderResult {
-		//if (elem.type){
 			let type = elem.type;
 			if (!type){
 				if (elem.body.type){
@@ -89,24 +88,9 @@ export default class TS extends Reader{
 				} 
 			}
 			if (elem.Type == "TsPropertySignature"){
-				console.error(elem);
+				//console.error(elem);
 			}
-			//if (!elem.hasOwnProperty("function")){
-			//	if (elem.key && typeof elem.key === "object"){
-			//		result.Children.push(this.addItem(elem.key));
-			//	} 
-			//}
-			/*if (elem.key && typeof elem.key === "object"){
-				console.log("Checking ", elem.key)
-				result.Children.push(this.addItem(elem.key));
-			} */
-			//result.Children = result.Children.filter((a)=>{return a != undefined; })
-			//result.Children.sort((a,b)=>{return a.Area[0] - b.Area[0];})
-			//console.error(result.Children);
-			//console.error("Creating ", result)
 			return result;
-		//}
-		return undefined;
 	}
 
 	async load(value : string){

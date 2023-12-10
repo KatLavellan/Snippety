@@ -1,6 +1,6 @@
 import Reader, { ReaderResult } from "./Reader";
 import "./HTML.scss"
-import { allIndexesOf } from "./Generic";
+import { allIndexesOf } from "../Generic";
 import { ChildNode } from "parse5/dist/tree-adapters/default";
 import {parse} from "svelte/compiler";
 import { TemplateNode } from "svelte/types/compiler/interfaces";

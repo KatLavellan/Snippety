@@ -1,0 +1,7 @@
+
+.sample>div{
+	background-color:var(--nice-colour);
+	width: 100px;
+	border-radius:10px;
+	height:100px;  
+}

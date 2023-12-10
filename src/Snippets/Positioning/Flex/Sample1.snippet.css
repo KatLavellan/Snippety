@@ -1,0 +1,5 @@
+.sample{
+	display:flex;
+	justify-content:center; /* horizontal */
+	align-items:center; /* vertical */
+}
