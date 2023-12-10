@@ -138,6 +138,8 @@ export default class Showcase{
 		snippet.classList.add("activated");
 		if (temp && temp.Header.length > 0){
 			this.Frame.contentDocument.body.querySelector("#code").innerHTML = this.getHeaderText();
+		}else{
+			this.Frame.contentDocument.body.querySelector(".sample").innerHTML = this.getBodyText();
 		}
 	}
 

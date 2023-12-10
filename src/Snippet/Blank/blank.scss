@@ -8,6 +8,9 @@ body, html{
 	margin:0px;
 	width:100vw;
 	height:100vh;
+	color:white;
+	font-size:1.3em;
+	font-family: Consolas, 'Courier New', monospace;
 }
 
 .sample{
@@ -18,7 +21,6 @@ body, html{
 	transition:all 0.5s;
 }
 .tooltip{
-	font-family: Consolas, 'Courier New', monospace;
 	position:fixed;
 	padding:0.2em;
 	color:white;

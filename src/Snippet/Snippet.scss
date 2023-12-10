@@ -42,6 +42,9 @@ code-showcase{
 		align-content: stretch;
 		display:flex;
 		flex-direction:column;
+		>code-snippet{
+			flex-grow: 1;
+		}
 	}
 }
 code-snippet{
@@ -65,6 +68,21 @@ code-snippet{
 		}
 		padding-top:0.3em;
 		padding-bottom:0.3em;
+	}
+	&.nostyle{
+		padding:0em;
+		background:none;
+		display:inline;
+		margin:0px;
+		article, main{
+			display:inline;
+			margin:0px;
+			padding:0px;
+		}
+		aside{
+			display:inline;
+			display:none;
+		}
 	}
 	flex-direction:column;
 	.fileType{

@@ -40,6 +40,8 @@ function SetTooltip(ev : MouseEvent, element : any){
 		tagName.innerText = elem.tagName.toLowerCase();
 		idName.innerText = (elem.id ? ("#"+elem.id) : "");
 		className.innerText = classText;
+		toolTip.style.left = 10 + "px";
+		toolTip.style.top = 10 + "px"; 
 		let width = toolTip.getBoundingClientRect().width;
 		let height = toolTip.getBoundingClientRect().height;
 		toolTip.style.left = clamp(0, ev.clientX,  window.innerWidth - width) + "px";

@@ -30,9 +30,9 @@ export default abstract class Reader extends EventEmitter {
 	}
 
 	IsInArea(area : [number, number], area2 : [number, number]){
-		console.log(area, area2);
+		//console.log(area, area2);
 		let result = area[0] < area2[1] && area2[0] < area[1];
-		console.log(result);
+		//console.log(result);
 		return result;
 	}
 

@@ -27,7 +27,7 @@ var walk = function(dir, added = "") {
     return results;
 }
 let pages = walk("./src/Content/");
-console.log(pages);
+//console.log(pages);
 let func = (page) => {
 	console.log(page);
     if (page.Path.endsWith('.html')) {
@@ -101,7 +101,8 @@ module.exports = (env)=>{
 			new webpack.DefinePlugin({
 				__WEBPACK_DIRECTORY: JSON.stringify(path.resolve(__dirname)),
 				__WORKING_DIRECTORY: JSON.stringify(path.resolve(__dirname)) ,
-				__FILES : JSON.stringify(pages)
+				__FILES : JSON.stringify(pages),
+				env : JSON.stringify(env)
 			}),
 			new webpack.SourceMapDevToolPlugin({
 				moduleFilenameTemplate : "[absolute-resource-path]"
