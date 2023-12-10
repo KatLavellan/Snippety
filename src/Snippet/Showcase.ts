@@ -25,6 +25,8 @@ export default class Showcase{
 	Stage : Element;
 	Base : Element;
 	Frame : HTMLIFrameElement;
+	Left : HTMLElement;
+	Right : HTMLElement;
 	constructor(element : HTMLElement){
 		this.Base = element;
 		this.Stage = this.Base.querySelector("code-stage");
@@ -124,15 +126,31 @@ export default class Showcase{
 	async load(){
 		
 		let snippets = this.Base.getElementsByTagName("code-snippet");
-		let side = document.createElement("aside");
-		this.Base.appendChild(side);
-		side.append(...snippets);
+		let left : Element[] = [];
+		let right : Element[] = [];
+		for (let i = 0; i < snippets.length; i++){
+			if (snippets[i].getAttribute("data-location") == "right"){
+				right.push(snippets[i]);
+			}else {
+				left.push(snippets[i]);
+			}
+		}
+		if (left.length > 0){
+			this.Left = document.createElement("aside");
+			this.Left.append(...left);
+			this.Base.append(this.Left);
+		}
 		this.Base.append(this.Stage);
+		if (right.length > 0){
+			this.Right = document.createElement("aside");
+			this.Right.append(...right);
+			this.Base.append(this.Right);
+		}
 		let iframe = document.createElement("iframe");
 		this.Frame = iframe;
 		iframe.src = Host + "/" + "blank.html";
 		this.Stage.append(iframe);
-		let identical = this.AreSnippetsIdentical(snippets);
+
 		
 		let promise = new Promise<boolean>((res)=>{
 			iframe.addEventListener("load", async ()=>{
