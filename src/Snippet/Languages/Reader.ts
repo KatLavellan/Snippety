@@ -188,6 +188,7 @@ export default abstract class Reader extends EventEmitter {
 			parent.append(elem);
 		}
 	}
+	Finished = false;
 
 	SetElements(doSetLayers = false){
 		let temp : ReaderResult[] = [...this.Results];
@@ -214,6 +215,7 @@ export default abstract class Reader extends EventEmitter {
 		}
 		
 		this.Element.append(...elements);
+		this.Finished = true;
 		this.emit("finish");
 	}
 }

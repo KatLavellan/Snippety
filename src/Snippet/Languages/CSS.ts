@@ -16,7 +16,7 @@ export default class CSS extends Reader{
             positions : true,
 			onComment:(comment, loc)=>{
 				if (comment == "relevant"){
-					this.Relevants.push(loc.end.offset + 1);
+					this.Relevants.push(loc.end.offset);
 					/*this.Results.push({
 						ClassList: ["RemovedComment"],
 						Area: [loc.start.offset, loc.end.offset],
@@ -24,7 +24,7 @@ export default class CSS extends Reader{
 						DebugText: ""
 					});*/
 				}else if (comment == "irrelevant"){
-					this.Relevants.push(loc.start.offset - 1);
+					this.Relevants.push(loc.start.offset);
 					/*this.Results.push({
 						ClassList: ["RemovedComment"],
 						Area: [loc.start.offset, loc.end.offset],

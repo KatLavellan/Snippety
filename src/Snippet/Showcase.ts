@@ -5,6 +5,7 @@ interface SnippetDetails{
 	Source : string;
 	Active : boolean;
 	ID : number;
+	Element : Element;
 }
 
 export default class Showcase{
@@ -63,7 +64,8 @@ export default class Showcase{
 			let result : SnippetDetails = {
 				Source : fileData,
 				Active : true,
-				ID : parseInt(snippets[i].getAttribute("data-snippet-id"))
+				ID : parseInt(snippets[i].getAttribute("data-snippet-id")),
+				Element : snippets[i]
 			};
 
 			let option = snippets[i].getAttribute("data-option");
@@ -142,6 +144,7 @@ export default class Showcase{
 		let loaded = this.GetNewInnerText(snippets);
 		await Promise.all([promise, loaded]);
 
+		let options : {[key:string] : any[]}= {};
 		iframe.contentDocument.body.querySelector(".sample").innerHTML = this.getSnippetText();
 		iframe.contentDocument.addEventListener("reloaded", ()=>{
 			iframe.contentDocument.body.querySelector(".sample").innerHTML = this.getSnippetText();

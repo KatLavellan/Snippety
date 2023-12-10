@@ -1,5 +1,3 @@
 .sample{
-	/*relevant*/
-	justify-content:space-around;
-	/*irrelevant*/
+	/*relevant*/justify-content:space-around;/*irrelevant*/
 }

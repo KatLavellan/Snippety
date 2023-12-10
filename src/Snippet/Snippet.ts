@@ -4,6 +4,7 @@ import { allIndexesOf } from "./Generic";
 import HTML from "./Languages/HTML";
 import TS from "./Languages/TS";
 import Showcase from "./Showcase";
+import Reader from "./Languages/Reader";
 
 export enum SnippetType{
     INLINE, INBETWEEN_LINES, BIG
@@ -87,14 +88,18 @@ export default class Snippet{
         if (options.hasOwnProperty(actualType)){
             let type = options[actualType];
             let reader = new type(file, this.Element, value);
-			reader.on("finish", ()=>{
+			let onFinish = ()=>{
 				let lineCount = this.Element.querySelectorAll("br").length;
 				for (let i = 0; i < lineCount + 1; i++){
 					let elem = document.createElement("div");
 					elem.innerText = ""+(i + 1);
 					this.Lines.append(elem);
 				}
-			})
+			};
+			reader.on("finish", onFinish)
+			if ((reader as Reader).Finished){
+				onFinish();
+			}
         }
     }
 }
