@@ -59,6 +59,13 @@ code-snippet{
 	*{
 		all:unset;
 	}
+	&.nonav{
+		nav{
+			display:none;
+		}
+		padding-top:0.3em;
+		padding-bottom:0.3em;
+	}
 	flex-direction:column;
 	.fileType{
 		&::before{

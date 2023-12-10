@@ -17,20 +17,8 @@ export default class CSS extends Reader{
 			onComment:(comment, loc)=>{
 				if (comment == "relevant"){
 					this.Relevants.push(loc.end.offset);
-					/*this.Results.push({
-						ClassList: ["RemovedComment"],
-						Area: [loc.start.offset, loc.end.offset],
-						Children: [],
-						DebugText: ""
-					});*/
 				}else if (comment == "irrelevant"){
 					this.Relevants.push(loc.start.offset);
-					/*this.Results.push({
-						ClassList: ["RemovedComment"],
-						Area: [loc.start.offset, loc.end.offset],
-						Children: [],
-						DebugText: ""
-					});*/
 				}else{
 					
 					this.Results.push({

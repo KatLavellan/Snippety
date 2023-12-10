@@ -1,10 +1,12 @@
 import {Host} from "./Constants";
+import Snippet from "./Snippet";
 
 interface SnippetDetails{
 	Option? : string;
 	Source : string;
 	Active : boolean;
 	ID : number;
+	Header : string;
 	Element : Element;
 }
 
@@ -56,16 +58,19 @@ export default class Showcase{
 			let type = snippets[i].getAttribute("data-type");
 			let file = snippets[i].getAttribute("data-url")
 			let fileData = (await import(`../Snippets/${file}`)).default;
-			
+			let headerData = "";
+			let bodyData = "";
 			if (type == "css"){
-				fileData = "<style>"+ (fileData)+"</style>";
-			}
-			if (["js","ts"].includes(type)){
-				fileData = "<style>"+ (fileData)+"</style>";
+				headerData = "<style>"+ (fileData)+"</style>";
+			}else if (["js","ts"].includes(type)){
+				headerData = "<script type=\"text/javascript\">"+ (fileData)+"</script>";
+			}else{
+				bodyData = fileData;
 			}
 			let result : SnippetDetails = {
-				Source : fileData,
+				Source : bodyData,
 				Active : true,
+				Header: headerData,
 				ID : parseInt(snippets[i].getAttribute("data-snippet-id")),
 				Element : snippets[i]
 			};
@@ -94,10 +99,18 @@ export default class Showcase{
 	Snippets : SnippetDetails[] = [];
 
 
-	getSnippetText(){
+	getBodyText(){
 		return this.Snippets.map(
 			(a)=>{
 				if (a.Active){ return a.Source; }else{
+					return "";
+				}
+			}).join("");
+	}
+	getHeaderText(){
+		return this.Snippets.map(
+			(a)=>{
+				if (a.Active){ return a.Header; }else{
 					return "";
 				}
 			}).join("");
@@ -112,15 +125,20 @@ export default class Showcase{
 			}
 		}
 		let id = parseInt(snippet.getAttribute("data-snippet-id"));
+		let temp : SnippetDetails;
 		for (let snippet of this.Snippets){
 			if (snippet.Option == curOption){
 				console.log(id, "==", snippet.ID)
 				snippet.Active = (id == snippet.ID);
+				if (id == snippet.ID){
+					temp = snippet;
+				}
 			}
 		}
 		snippet.classList.add("activated");
-		this.Frame.contentDocument.body.querySelector(".sample").innerHTML = this.getSnippetText();
-
+		if (temp && temp.Header.length > 0){
+			this.Frame.contentDocument.body.querySelector("#code").innerHTML = this.getHeaderText();
+		}
 	}
 
 	async load(){
@@ -163,12 +181,15 @@ export default class Showcase{
 		await Promise.all([promise, loaded]);
 
 		let options : {[key:string] : any[]}= {};
-		iframe.contentDocument.body.querySelector(".sample").innerHTML = this.getSnippetText();
+		iframe.contentDocument.body.querySelector("#code").innerHTML = this.getHeaderText();
+		iframe.contentDocument.body.querySelector(".sample").innerHTML = this.getBodyText();
 		iframe.contentDocument.addEventListener("reloaded", ()=>{
-			iframe.contentDocument.body.querySelector(".sample").innerHTML = this.getSnippetText();
+			iframe.contentDocument.body.querySelector("#code").innerHTML = this.getHeaderText();
+			iframe.contentDocument.body.querySelector(".sample").innerHTML = this.getBodyText();
 		});
 		iframe.addEventListener("load", ()=>{
-			iframe.contentDocument.body.querySelector(".sample").innerHTML = this.getSnippetText();
+			iframe.contentDocument.body.querySelector("#code").innerHTML = this.getHeaderText();
+			iframe.contentDocument.body.querySelector(".sample").innerHTML = this.getBodyText();
 		});
 	}
 }

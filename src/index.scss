@@ -12,6 +12,7 @@ body{
 }
 
 body{
+	overflow-y:hidden;
 	>nav{
 		z-index:1;
 		color:white;
@@ -20,6 +21,7 @@ body{
 		transition-property: top, opacity;
 		transition-duration: 0.6s;
 		top:-100vh;
+		overflow:hidden;
 		right:0px;
 		background-color:#000000;
 		position:fixed;
@@ -99,6 +101,7 @@ body{
 		//display:flex;
 		//flex-direction:row;
 		height:100vh;
+		overflow-y:auto;
 		//flex-wrap:wrap;
 		width:100vw;
 		>aside{
@@ -118,10 +121,11 @@ body{
 	}
 	>main>article{
 		color:white;
-		min-height:calc(100% - 80px);
+		min-height:calc(100% - 120px);
 		padding:20px;
 		background-color:#3a3a3a;
 		margin:auto;
+		overflow-y:auto;
 		width:calc(min(100vw, 1400px));
 		font-family: 'Inter', sans-serif;
 		font-size:1.4em;
