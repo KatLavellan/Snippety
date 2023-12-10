@@ -51,13 +51,19 @@ export default class Snippet{
         this.Lines = document.createElement("aside");
         this.Main = document.createElement("main");
         this.Element = document.createElement("article");
+		this.Nav = document.createElement("nav");
+		let fileType = document.createElement("span");
+		fileType.classList.add("fileType");
 		this.Main.append(this.Lines, this.Element)
-        this.Base.append(this.Main);
+        this.Base.append(this.Nav, this.Main);
         let url = this.Base.getAttribute("data-url");
 		file = file ? file : url;
         let actualType = type ? type : (file.substring(file.lastIndexOf(".") + 1).toLowerCase());
         this.Base.classList.add(actualType);
 		this.Base.setAttribute("data-type", actualType);
+		fileType.classList.add(actualType);
+		fileType.innerText = actualType;
+		this.Nav.append(fileType);
         if (this.Base.getAttribute("data-hidden") == "true"){
 			this.Base.style.display="none";
 		}else{
@@ -67,10 +73,7 @@ export default class Snippet{
 				// eh
 			}
 			if (this.Base.getAttribute("data-description")){
-				this.Nav = document.createElement("nav");
-				this.Nav.innerText = this.Base.getAttribute("data-description");
-				this.Base.append(this.Nav, this.Main);
-				
+				//this.Nav.innerText = this.Base.getAttribute("data-description");
 			}
 		}
     }

@@ -82,6 +82,10 @@ module.exports = (env)=>{
 						"sass-loader",
 					],
 				},
+				{
+					test: /\.(svg|png|jpg)/,
+					type: 'asset/resource'
+				}
 			],
 		},
 

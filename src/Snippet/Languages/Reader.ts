@@ -17,7 +17,7 @@ export default abstract class Reader{
 		"brackets": ["{", "}"],
 		"punctuation": [";", ",", ":"]
 	};
-	abstract Brackets : string[];
+	
 	File : string;
 	constructor(file : string, element : HTMLElement, value : string){
 		this.Text = value;

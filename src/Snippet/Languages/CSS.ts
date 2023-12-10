@@ -6,7 +6,10 @@ import { allIndexesOf } from "../Generic";
 
 export default class CSS extends Reader{
 
-	Brackets : string[] = ["{", "}"];
+	Modifiers : {[key:string] : string[]} = {
+		"brackets": ["{", "}"],
+		"punctuation": [":", ";"]
+	};
     constructor(file : string, element : HTMLElement, value : string){
         super(file, element, value);
         const AST = csstree.parse(value, {
