@@ -1,17 +1,20 @@
+import EventEmitter from "events";
 
 export interface ReaderResult{
 	ClassList : string[];
-	Area : number[];
+	Area : [number, number];
 	Children : ReaderResult[];
 	DebugText : string;
 };
 
-export default abstract class Reader{
+export default abstract class Reader extends EventEmitter {
 	
 	Results : ReaderResult[] = [];
 	Text : string;
 	Element : HTMLElement;
 	Nodes : string[] = ["\n", "\t"];
+
+	Relevants : number[] = [];
 
 	Modifiers : {[key:string] : string[]} = {
 		"brackets": ["{", "}"],
@@ -20,11 +23,41 @@ export default abstract class Reader{
 	
 	File : string;
 	constructor(file : string, element : HTMLElement, value : string){
+		super();
 		this.Text = value;
 		this.File = file;
 		this.Element = element;
 	}
 
+	IsInArea(area : [number, number], area2 : [number, number]){
+		console.log(area, area2);
+		let result = area[0] < area2[1] && area2[0] < area[1];
+		console.log(result);
+		return result;
+	}
+
+	GetIntersection(a : [number, number], b: [number, number]){
+		let min = (a[0] < b[0]  ? a : b)
+		let max = (min == a ? b : a)
+	
+		//min ends before max starts -> no intersection
+		if (min[1] < max[0])
+			return "";//the ranges don't intersect
+	
+		return this.Text.substring(max[0], (min[1] < max[1] ? min[1] : max[1]));
+	}
+	IsInScope(area : [number, number]){
+		if (this.Relevants.length == 0){
+			return true;
+		}
+		let relevants = this.GetRelevants();
+		for (let i = 0; i < relevants.length; i++){
+			if (this.IsInArea(area, relevants[i])){
+				 return true; 
+			}
+		}
+		return false;
+	}
 	SetLayers(array : ReaderResult[]){
 		let i = 0;
 		let oldLength = array.length;
@@ -76,66 +109,84 @@ export default abstract class Reader{
 		return result;
 	}
 
-	AddText(parent : HTMLElement, text : string){
-
-		let nodes = [...this.Nodes];
-		for (let mod in this.Modifiers){
-			nodes.push(...this.Modifiers[mod])
+	GetRelevants() : [number, number][]{
+		let results : [number, number][] = [];
+		for (let i = 0; i < this.Relevants.length; i+=2){
+			results.push([this.Relevants[i], (this.Relevants.length - 1 == i) ? this.Text.length : this.Relevants[i + 1] ])
 		}
-		let split = this.Splitter(text, nodes);
-		for (let i = 0; i < split.length; i++){
-			if (nodes.includes(split[i])){
-				let elem = document.createElement(split[i] == "\n" ? "br" : "span");
-				let found = false;
-				for (let mod in this.Modifiers){
-					if (this.Modifiers[mod].includes(split[i])){
-						elem.classList.add(mod);
-						elem.innerText = split[i];
-						found = true;
-						break;
+		return results;
+	}
+
+	AddText(parent : HTMLElement, area : [number, number]){
+		if (this.IsInScope(area)){
+			let nodes = [...this.Nodes];
+			for (let mod in this.Modifiers){
+				nodes.push(...this.Modifiers[mod])
+			}
+			let relevants = this.GetRelevants();
+			let text = (relevants.length > 0) ? "" : this.Text.substring(area[0], area[1]);
+			for (let i = 0; i < relevants.length; i++){
+				text += this.GetIntersection(relevants[i], area);
+			}
+			let split = this.Splitter(text, nodes);
+			for (let i = 0; i < split.length; i++){
+				if (nodes.includes(split[i])){
+					let elem = document.createElement(split[i] == "\n" ? "br" : "span");
+					let found = false;
+					for (let mod in this.Modifiers){
+						if (this.Modifiers[mod].includes(split[i])){
+							elem.classList.add(mod);
+							elem.innerText = split[i];
+							found = true;
+							break;
+						}
 					}
+					if (split[i] == "\t"){
+						elem.classList.add("tab");
+						elem.innerHTML = "&#9;";
+					}
+					parent.append(elem);
+				}else{
+					let textNode = document.createTextNode(split[i]);
+					parent.append(textNode);
 				}
-				if (split[i] == "\t"){
-					elem.classList.add("tab");
-					elem.innerHTML = "&#9;";
-				}
-				parent.append(elem);
-			}else{
-				let textNode = document.createTextNode(split[i]);
-				parent.append(textNode);
 			}
 		}
 	}
 
 	LastPos = 0;
 	CreateSpan(parent : HTMLElement, result : ReaderResult) {
-		for (let key of result.Children){
-			key.DebugText = this.Text.substring(key.Area[0], key.Area[1]);
-		}
-		result.Children.sort((a, b)=>{return a.Area[0] - b.Area[0];});
-		let elem = document.createElement("span");
-		elem.classList.add(...result.ClassList);
-		if (result.Children.length == 0){
-			this.AddText(elem, this.Text.substring(result.Area[0], result.Area[1]));
-		}else{
-			let startPos = result.Area[0];
-			if (result.Children.length > 0){
-				let lastPos = startPos;
-				for (let i = 0; i < result.Children.length; i++){
-					if (lastPos != result.Children[i].Area[0]){
-						this.AddText(elem, this.Text.substring(lastPos, result.Children[i].Area[0]));
-					}
-					this.CreateSpan(elem, result.Children[i]);
-					lastPos = result.Children[i].Area[1];
-				}
-				let finalElem = result.Children[result.Children.length - 1];
-				if (finalElem.Area[1] < result.Area[1]){
-					this.AddText(elem, this.Text.substring(finalElem.Area[1], result.Area[1]));
-				}
-				
+		if (this.IsInScope(result.Area)){
+			for (let key of result.Children){
+				key.DebugText = this.Text.substring(key.Area[0], key.Area[1]);
 			}
+			result.Children.sort((a, b)=>{return a.Area[0] - b.Area[0];});
+			let elem = document.createElement("span");
+			elem.classList.add(...result.ClassList);
+			if (result.Children.length == 0){
+				if (this.IsInScope(result.Area)){
+					this.AddText(elem, result.Area);
+				}
+			}else{
+				let startPos = result.Area[0];
+				if (result.Children.length > 0){
+					let lastPos = startPos;
+					for (let i = 0; i < result.Children.length; i++){
+						if (lastPos != result.Children[i].Area[0]){
+							this.AddText(elem, [lastPos, result.Children[i].Area[0]]);
+						}
+						this.CreateSpan(elem, result.Children[i]);
+						lastPos = result.Children[i].Area[1];
+					}
+					let finalElem = result.Children[result.Children.length - 1];
+					if (finalElem.Area[1] < result.Area[1]){
+						this.AddText(elem, [finalElem.Area[1], result.Area[1]]);
+					}
+					
+				}
+			}
+			parent.append(elem);
 		}
-		parent.append(elem);
 	}
 
 	SetElements(doSetLayers = false){
@@ -153,16 +204,16 @@ export default abstract class Reader{
 		
 		for (let i = 0; i < temp.length; i++){
 			if (lastPos != temp[i].Area[0]){
-				let value = this.Text.substring(lastPos, temp[i].Area[0]);
-				this.AddText(this.Element, value);
+				this.AddText(this.Element, [lastPos, temp[i].Area[0]]);
 			}
 			this.CreateSpan(this.Element, temp[i]);
 			lastPos = temp[i].Area[1];
 		}
 		if (lastPos != this.Text.length){
-			this.AddText(this.Element, this.Text.substring(lastPos));
+			this.AddText(this.Element, [lastPos, this.Text.length]);
 		}
 		
 		this.Element.append(...elements);
+		this.emit("finish");
 	}
 }

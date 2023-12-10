@@ -119,7 +119,7 @@ export default class Ocular{
 		center.classList.add("center");
 		document.body.append(this.Nav);
 		this.Nav.append(center, planet);
-		this.Canvas = document.createElement("canvas");
+		/*this.Canvas = document.createElement("canvas");
 		let observer = new ResizeObserver(()=>{
 			this.Canvas.height = this.Nav.clientHeight;
 			this.Canvas.width = this.Nav.clientWidth;
@@ -129,7 +129,7 @@ export default class Ocular{
 		observer.observe(this.Nav);
 		this.Canvas.height = this.Nav.clientHeight;
 		this.Canvas.width = this.Nav.clientWidth;
-		this.Nav.append(this.Canvas);
+		this.Nav.append(this.Canvas);*/
 
 		let header = document.createElement("header");
 		let main = document.createElement("main");
@@ -194,8 +194,16 @@ export default class Ocular{
 				}
 			}
 		}
-		//this.Nav.classList.toggle("active");
-		
+		this.Nav.addEventListener("click", (ev)=>{
+			if (ev.target == this.Nav){
+				this.Nav.classList.toggle("active");
+			}
+		})
+		center.addEventListener("click", (ev)=>{
+			//if (ev.target == this.Nav){
+				this.Nav.classList.toggle("active");
+			//}
+		})
 		/*
 		this.Nav.append(this.Slider("a", 0, 10));
 		this.Nav.append(this.Slider("k", 0, 2));
@@ -204,7 +212,7 @@ export default class Ocular{
 		this.Update();
 	} 
 	static Draw(){
-		this.CanvasContext.clearRect(0, 0, this.Canvas.width, this.Canvas.height);
+		/*this.CanvasContext.clearRect(0, 0, this.Canvas.width, this.Canvas.height);
 		for (let i = 0; i < this.Count; i++){
 			let baseRotation = this.RotationScale * i + this.GetStartRotation();
 			let oldX = this.Canvas.width / 2;
@@ -237,7 +245,7 @@ export default class Ocular{
 				
 			}
 			//return;
-		}
+		}*/
 	}
 	static Update(){
 		let startRotation = this.GetStartRotation();
@@ -259,7 +267,7 @@ export default class Ocular{
 				 
 			}
 		}
-		this.Draw();
+		//this.Draw();
 	}
 
 }

@@ -15,12 +15,31 @@ export default class CSS extends Reader{
         const AST = csstree.parse(value, {
             positions : true,
 			onComment:(comment, loc)=>{
-                this.Results.push({
-                    ClassList: ["Comment"],
-                    Area: [loc.start.offset, loc.end.offset],
-                    Children: [],
-					DebugText: ""
-                });
+				if (comment == "relevant"){
+					this.Relevants.push(loc.end.offset + 1);
+					/*this.Results.push({
+						ClassList: ["RemovedComment"],
+						Area: [loc.start.offset, loc.end.offset],
+						Children: [],
+						DebugText: ""
+					});*/
+				}else if (comment == "irrelevant"){
+					this.Relevants.push(loc.start.offset - 1);
+					/*this.Results.push({
+						ClassList: ["RemovedComment"],
+						Area: [loc.start.offset, loc.end.offset],
+						Children: [],
+						DebugText: ""
+					});*/
+				}else{
+					
+					this.Results.push({
+						ClassList: ["Comment"],
+						Area: [loc.start.offset, loc.end.offset],
+						Children: [],
+						DebugText: ""
+					});
+				}
 			}
         });
         

@@ -13,6 +13,7 @@ body{
 
 body{
 	>nav{
+		z-index:1;
 		color:white;
 		width:100vw;
 		height:100vh;
@@ -23,15 +24,14 @@ body{
 		background-color:#000000;
 		position:fixed;
 		opacity:0.0;
-		display:none;
 		--size: min(20vw, 20vh);
 		canvas{
-			position:fixed;
+			position:absolute;
 			pointer-events:none;
 			z-index:1;
 		}
 		.category{
-			position:fixed;
+			position:absolute;
 			padding-left:0.3em;
 			padding-right:0.3em;
 			padding-top:0.2em;
@@ -124,5 +124,6 @@ body{
 		margin:auto;
 		width:calc(min(100vw, 1400px));
 		font-family: 'Inter', sans-serif;
+		font-size:1.4em;
 	}
 }

@@ -31,6 +31,7 @@ export default class Snippet{
     Main : HTMLElement;
     Element : HTMLElement;
 	Nav : HTMLElement;
+	static ID : number = 0;
 
 	static Initialise(){
 		let snippetShowcaseElements = document.getElementsByTagName("code-showcase");
@@ -56,21 +57,20 @@ export default class Snippet{
 		fileType.classList.add("fileType");
 		this.Main.append(this.Lines, this.Element)
         this.Base.append(this.Nav, this.Main);
+		this.Base.setAttribute("data-snippet-id", ""+(Snippet.ID++));
         let url = this.Base.getAttribute("data-url");
 		file = file ? file : url;
         let actualType = type ? type : (file.substring(file.lastIndexOf(".") + 1).toLowerCase());
         this.Base.classList.add(actualType);
 		this.Base.setAttribute("data-type", actualType);
 		fileType.classList.add(actualType);
-		fileType.innerText = actualType;
+		fileType.innerText = actualType.toUpperCase();
 		this.Nav.append(fileType);
         if (this.Base.getAttribute("data-hidden") == "true"){
 			this.Base.style.display="none";
 		}else{
 			if(file || url){
 				this.Load(file ? file : url, actualType);
-			} else {
-				// eh
 			}
 			if (this.Base.getAttribute("data-description")){
 				//this.Nav.innerText = this.Base.getAttribute("data-description");
@@ -84,15 +84,17 @@ export default class Snippet{
        // console.log(actualType);
         let value = (await import(`../Snippets/${file}`)).default;
         value = value.replaceAll("\r", "");
-        let lineCount = allIndexesOf(value, "\n").length;
-        for (let i = 0; i < lineCount + 1; i++){
-            let elem = document.createElement("div");
-            elem.innerText = ""+(i + 1);
-            this.Lines.append(elem);
-        }
         if (options.hasOwnProperty(actualType)){
             let type = options[actualType];
             let reader = new type(file, this.Element, value);
+			reader.on("finish", ()=>{
+				let lineCount = this.Element.querySelectorAll("br").length;
+				for (let i = 0; i < lineCount + 1; i++){
+					let elem = document.createElement("div");
+					elem.innerText = ""+(i + 1);
+					this.Lines.append(elem);
+				}
+			})
         }
     }
 }
